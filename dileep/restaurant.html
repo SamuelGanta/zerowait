@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ZeroWait Restaurant</title>
+
+<link rel="stylesheet" href="restaurant.css">
+
+</head>
+
+<body>
+
+<header class="hero" id="heroSection">
+    <button class="back-btn" onclick="window.location.href='zerowait_zen.html#restaurants'">← Back to Restaurants</button>
+    <div class="overlay">
+        <h1 id="restaurantName">
+            Loading...
+        </h1>
+        <p id="restaurantInfo">
+            ⭐ 4.5 Rating • Fast Service
+        </p>
+    </div>
+</header>
+
+<div class="container">
+
+<h2 class="section-title">
+    Popular Menu
+</h2>
+
+<div class="menu-grid" id="menuContainer">
+
+</div>
+<div class="cart-box">
+
+    <h2>
+        Cart Items
+    </h2>
+
+    <div id="cartItems">
+
+    </div>
+
+    <hr style="
+        margin:20px 0;
+        border:none;
+        border-top:1px solid #ddd;
+    ">
+
+    <h2>
+        Cart Total:
+        ₹<span id="cartTotal">0</span>
+    </h2>
+<div class="order-details">
+
+    <input
+        type="text"
+        id="customerName"
+        placeholder="Enter Customer Name">
+
+    <select id="orderType">
+
+        <option value="Dine In">
+            Dine In
+        </option>
+
+        <option value="Take Away">
+            Take Away
+        </option>
+
+    </select>
+
+    <select id="tableNumber">
+
+        <option value="T1">Table T1</option>
+        <option value="T2">Table T2</option>
+        <option value="T3">Table T3</option>
+        <option value="T4">Table T4</option>
+        <option value="T5">Table T5</option>
+
+    </select>
+
+</div>
+    <button
+        class="checkout-btn"
+        onclick="checkout()">
+
+        Checkout
+
+    </button>
+
+</div>
+
+</div>
+
+<script src="restaurant.js"></script>
+
+</body>
+
+</html>

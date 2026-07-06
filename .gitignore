@@ -1,0 +1,5 @@
+node_modules/
+.kombai/
+dileep/.env
+.env
+.env.*

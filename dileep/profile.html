@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroWait Profile</title>
+<link rel="stylesheet" href="profile.css">
+</head>
+<body>
+<header style="background:#009e99;padding:12px 20px;display:flex;align-items:center;color:#fff;gap:12px;">
+  <button onclick="window.location.href='zerowait_zen.html'" style="border:none;background:rgba(255,255,255,.2);color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;transition:background .2s;">← Back to home</button>
+  <h1 style="margin:0;font-size:20px;flex:1;">My Profile</h1>
+</header>
+<div class="profile-container">
+  <div class="profile-card">
+    <div class="avatar" id="avatar">S</div>
+    <h2 id="welcome">Welcome</h2>
+    <p id="phone">+91 XXXXXXXXXX</p>
+    <p class="profile-subtitle">Your ZeroWait lounge, rewards, and recent activity in one place.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h1>📦</h1>
+      <h3 id="totalOrders">0</h3>
+      <p>Total Orders</p>
+    </div>
+    <div class="stat-card">
+      <h1>💰</h1>
+      <h3 id="walletBalance">₹0</h3>
+      <p>Wallet Balance</p>
+    </div>
+    <div class="stat-card">
+      <h1>⭐</h1>
+      <h3 id="rewardPoints">350</h3>
+      <p>Reward Points</p>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <h2>Account</h2>
+    <button class="menu-item" data-action="edit">
+      <span>👤 Edit Profile</span>
+      <span>›</span>
+    </button>
+    <button class="menu-item" data-action="orders">
+      <span>📦 My Orders</span>
+      <span>›</span>
+    </button>
+    <button class="menu-item" data-action="wallet">
+      <span>💳 Wallet</span>
+      <span>›</span>
+    </button>
+    <button class="menu-item" data-action="settings">
+      <span>⚙️ Settings</span>
+      <span>›</span>
+    </button>
+  </div>
+  </div>
+
+  <div class="history-section">
+    <h2>Recent Orders</h2>
+    <div id="orderHistory">
+      <div class="order-card">Loading orders...</div>
+    </div>
+  </div>
+
+  <div class="profile-notice" id="profileNotice"></div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="action-modal" id="actionModal" hidden>
+  <div class="action-modal-card">
+    <button class="action-modal-close" id="closeActionModal" onclick="closeActionModal()" aria-label="Close">×</button>
+    <div id="actionModalContent"></div>
+  </div>
+</div>
+
+<script src="profile.js"></script>
+</body>
+</html>

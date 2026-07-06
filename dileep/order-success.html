@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Order Confirmed</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f7fa;
+}
+
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    width:400px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1{
+    color:#00a8a8;
+}
+
+.status{
+    background:#e8ffef;
+    color:green;
+    padding:10px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.queue{
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+button{
+    margin-top:25px;
+    padding:12px 25px;
+    border:none;
+    background:#00a8a8;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>✅ Order Confirmed</h1>
+
+        <h2>Paradise Biryani</h2>
+
+        <p>Amount Paid Successfully</p>
+
+        <div class="status" id="status">
+    Loading...
+        </div>
+ 
+        <div class="queue" id="queue">
+    Loading...
+        </div>
+
+        <p id="waitTime">
+    Loading...
+        </p>
+
+        <button onclick="location.href='restaurant.html'">
+            Order Again
+        </button>
+
+    </div>
+
+</div>
+<script>
+
+async function loadOrderDetails() {
+
+    try {
+
+        const response = await fetch('/api/latest-order');
+
+        const data = await response.json();
+
+        document.getElementById("status").innerText =
+            "Order Status: " + data.status;
+
+        document.getElementById("queue").innerText =
+            "Queue Position: #" + data.queuePosition;
+
+        document.getElementById("waitTime").innerText =
+            "Estimated Wait Time: " + data.waitTime + " Minutes";
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+
+loadOrderDetails();
+
+</script>
+</body>
+</html>

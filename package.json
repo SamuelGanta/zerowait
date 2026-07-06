@@ -1,0 +1,17 @@
+{
+  "name": "zerowait-otp-backend",
+  "version": "1.0.0",
+  "description": "OTP send/verify backend for ZeroWait, using Twilio Verify",
+  "main": "server.js",
+  "scripts": {
+    "start": "node dileep/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "google-auth-library": "^10.9.0",
+    "pg": "^8.22.0",
+    "twilio": "^5.0.4"
+  }
+}

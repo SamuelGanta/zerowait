@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Google Test</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<h2>Google Login Test</h2>
+
+<div id="g_id_onload"
+     data-client_id="680153931511-34micoi6me35sq9cc20gdfj7gk73eoiu.apps.googleusercontent.com"
+     data-callback="handleGoogleLogin">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard">
+</div>
+
+<script>
+function handleGoogleLogin(response) {
+    console.log("SUCCESS:", response);
+}
+</script>
+
+</body>
+</html>
