@@ -2009,7 +2009,7 @@ function generateOTP(){ return Math.floor(100000 + Math.random() * 900000).toStr
 //
 // Change API_BASE below to wherever your backend is hosted.
 // ══════════════════════════════════════════════════════════════
-const API_BASE = ''; // e.g. 'https://api.zerowait.app' — leave blank if frontend & backend share the same origin
+const API_BASE = 'https://zerowait-2.onrender.com';; // e.g. 'https://api.zerowait.app' — leave blank if frontend & backend share the same origin
 
 function switchLoginTab(tab){
   const phoneBtn = document.getElementById('tab-phone-btn');
@@ -2567,7 +2567,15 @@ async function handleGoogleLogin(response) {
 
         console.log("Sending token to backend...");
 
-        const res = await fetch('/api/auth/google', {
+        const res = await fetch(`${API_BASE}/api/auth/google`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        credential: response.credential
+    })
+});, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
