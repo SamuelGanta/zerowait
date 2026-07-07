@@ -629,9 +629,9 @@ app.get('/api/orders/user/:id', async (req, res) => {
 });
             
 function startServer(port) {
-    const server = app.listen(port, () => {
-        console.log(`🍽️ ZeroWait OTP Server running on http://localhost:${port}`);
-    });
+    const server = app.listen(PORT, () => {
+  console.log(`🚀 ZeroWait OTP Server running on port ${PORT}`);
+});
 
     server.on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
