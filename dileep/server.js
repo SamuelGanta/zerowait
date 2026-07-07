@@ -29,16 +29,18 @@ const pool = new Pool({
   },
 });
 let dbReady = false;
-pool.connect()
-  .then(() => {
+
+(async () => {
+  try {
+    await pool.query("SELECT 1");
     dbReady = true;
     console.log("✅ PostgreSQL Connected");
-  })
-  .catch(err => {
+  } catch (err) {
     dbReady = false;
     console.error("❌ PostgreSQL Error:", err);
-    console.warn('Falling back to in-memory demo data for restaurant and order flows.');
-  });
+    console.warn("Falling back to in-memory demo data for restaurant and order flows.");
+  }
+})();
 
 const app = express();
 
