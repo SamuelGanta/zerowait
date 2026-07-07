@@ -41,12 +41,19 @@ pool.connect()
   });
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+
+// Home route
+app.get("/", (req, res) => {
+  res.send("✅ ZeroWait Backend is Running Successfully!");
+});
+
 console.log("Serving files from:", __dirname);
 
-const PORT = Number(process.env.PORT || 3001);
+const PORT = process.env.PORT || 10000;
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE_SID } = process.env;
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 let twilioClient = null;
@@ -628,8 +635,6 @@ app.get('/api/orders/user/:id', async (req, res) => {
 
 });
             
-const PORT = process.env.PORT || 10000;
-
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 ZeroWait OTP Server running on port ${PORT}`);
 });
