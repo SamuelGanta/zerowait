@@ -2576,14 +2576,6 @@ async function handleGoogleLogin(response) {
         credential: response.credential
     })
 });, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                token: response.credential
-            })
-        });
 
         console.log("HTTP Status:", res.status);
 
