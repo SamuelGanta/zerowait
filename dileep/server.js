@@ -628,21 +628,8 @@ app.get('/api/orders/user/:id', async (req, res) => {
 
 });
             
-function startServer(port) {
-    const server = app.listen(PORT, () => {
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 ZeroWait OTP Server running on port ${PORT}`);
 });
-
-    server.on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-            console.warn(`Port ${port} is busy. Trying ${port + 1}...`);
-            startServer(port + 1);
-            return;
-        }
-
-        console.error(err);
-        process.exit(1);
-    });
-}
-
-startServer(PORT);
