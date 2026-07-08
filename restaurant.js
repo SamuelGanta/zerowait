@@ -27,9 +27,8 @@ async function loadRestaurant() {
 
     try {
 
-        const response = await fetch(
-            `/api/restaurants/${restaurantId}`
-        );
+        const response = await fetch(`${API_BASE}/api/restaurants`)
+
 
         const data = await response.json();
         

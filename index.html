@@ -1888,7 +1888,11 @@ function goToAccount() {
 
     if (isLoggedIn === "true") {
 
+<<<<<<< HEAD
         window.location.href = "profile.html";
+=======
+        window.location.href = "dileep/profile.html";
+>>>>>>> a8dbc09 (Moved frontend files to root)
 
     } else {
 
@@ -2327,9 +2331,13 @@ async function loadRestaurants() {
 
     try {
 
+<<<<<<< HEAD
         const response = await fetch(
             "/api/restaurants"
         );
+=======
+        const response = await fetch(`${API_BASE}/api/restaurants`);
+>>>>>>> a8dbc09 (Moved frontend files to root)
 
         const data = await response.json();
         allRestaurants = Array.isArray(data) && data.length ? data : fallbackRestaurants;
@@ -2417,8 +2425,12 @@ function openRestaurant(id) {
 
     console.log("Opening restaurant:", id);
 
+<<<<<<< HEAD
     window.location.href =
         `restaurant.html?id=${id}`;
+=======
+    window.location.href = "dileep/restaurant.html?id=" + id;
+>>>>>>> a8dbc09 (Moved frontend files to root)
 }
 // ====================
 // FILTER BY CUISINE
@@ -2576,7 +2588,10 @@ async function handleGoogleLogin(response) {
         credential: response.credential
     })
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> a8dbc09 (Moved frontend files to root)
         console.log("HTTP Status:", res.status);
 
         const data = await res.json();

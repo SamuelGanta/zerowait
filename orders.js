@@ -35,7 +35,7 @@ try {
 
             </div>
 
-            <div class="order-info">
+            <div class="order-info">fetch(`${API_BASE}/api/restaurants`)
 
                 <p>
                     <strong>Amount:</strong>
