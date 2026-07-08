@@ -132,7 +132,7 @@ async function queryDb(text, params = []) {
 
 // POST /api/send-otp  { phone }
 // POST /api/send-otp
-app.post('/api/send-otp', async (req, res) => {
+app.postfetch(`${API_BASE}/api/send-otp`,async (req, res) => {
   const { phone } = req.body;
 
   if (!phone) {
