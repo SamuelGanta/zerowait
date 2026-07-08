@@ -1,3 +1,5 @@
+const API_BASE = "https://zerowait-2.onrender.com";
+
 const params = new URLSearchParams(window.location.search);
 const restaurantId = params.get("id");
 
@@ -30,8 +32,7 @@ async function loadRestaurant() {
         const response = await fetch(`${API_BASE}/api/restaurants`)
 
 
-        const data = await response.json();
-        
+        const data = await response.js
         currentRestaurant = data;
 
         document.getElementById(
