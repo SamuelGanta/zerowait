@@ -302,6 +302,29 @@ app.post('/api/auth/google', async (req, res) => {
 // GET SINGLE RESTAURANT + MENU
 // =============================
 
+app.get('/api/restaurants', async (req, res) => {
+    try {
+        const result = await queryDb(
+            'SELECT * FROM restaurants ORDER BY rating DESC'
+        );
+
+        const restaurants = result.rows.map(restaurant => ({
+            ...restaurant,
+            menu: getMenuForRestaurant(restaurant.name)
+        }));
+
+        res.json(restaurants);
+
+    } catch (err) {
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch restaurants'
+        });
+    }
+});
+
 app.get('/api/restaurants/:id', async (req, res) => {
 
     const { id } = req.params;
