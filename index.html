@@ -2328,13 +2328,7 @@ async function loadRestaurants() {
 
     try {
 
-<<<<<<< HEAD
-        const response = await fetch(
-            "/api/restaurants"
-        );
-=======
-        const response = await fetch(`${API_BASE}/api/restaurants`);
->>>>>>> a8dbc09 (Moved frontend files to root)
+      const response = await fetch(`${API_BASE}/api/restaurants`);
 
         const data = await response.json();
         allRestaurants = Array.isArray(data) && data.length ? data : fallbackRestaurants;
@@ -2581,22 +2575,18 @@ async function handleGoogleLogin(response) {
         credential: response.credential
     })
 });
-<<<<<<< HEAD
+console.log("HTTP Status:", res.status);
 
-=======
->>>>>>> a8dbc09 (Moved frontend files to root)
-        console.log("HTTP Status:", res.status);
+const data = await res.json();
 
-        const data = await res.json();
+console.log("Backend Response:", data);
 
-        console.log("Backend Response:", data);
+if (data.success) {
 
-        if (data.success) {
-
-            localStorage.setItem(
-    "currentUser",
-    JSON.stringify(data.user)
-);
+    localStorage.setItem(
+        "currentUser",
+        JSON.stringify(data.user)
+    );
 
 // Tell the website the user is logged in
 localStorage.setItem("loggedIn", "true");
