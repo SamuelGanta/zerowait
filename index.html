@@ -2614,41 +2614,6 @@ async function handleGoogleLogin(response) {
         showToast("Unable to connect to server.");
     }
 }
-
-// Tell the website the user is logged in
-localStorage.setItem("loggedIn", "true");
-
-// Save the user's name
-localStorage.setItem(
-    "name",
-    data.user.name
-);
-
-// Save email (optional)
-localStorage.setItem(
-    "email",
-    data.user.email
-);
-
-showToast("Google Login Successful!");
-
-location.reload();
-
-        } else {
-
-            showToast(data.message);
-
-        }
-
-    } catch (err) {
-
-        console.error("Google Login Error:", err);
-
-        showToast("Google Login Failed");
-
-    }
-
-}
 </script>
 </body>
 </html>
