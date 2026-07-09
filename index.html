@@ -2567,26 +2567,53 @@ async function handleGoogleLogin(response) {
         console.log("Sending token to backend...");
 
         const res = await fetch(`${API_BASE}/api/auth/google`, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        credential: response.credential
-    })
-});
-console.log("HTTP Status:", res.status);
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                credential: response.credential
+            })
+        });
 
-const data = await res.json();
+        console.log("HTTP Status:", res.status);
 
-console.log("Backend Response:", data);
+        const data = await res.json();
 
-if (data.success) {
+        console.log("Backend Response:", data);
 
-    localStorage.setItem(
-        "currentUser",
-        JSON.stringify(data.user)
-    );
+        if (!res.ok || !data.success) {
+            showToast(data.message || "Google login failed");
+            console.error(data);
+            return;
+        }
+
+        // Save user
+        localStorage.setItem("currentUser", JSON.stringify(data.user));
+        localStorage.setItem("loggedIn", "true");
+
+        // Save token if backend returns one
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+        }
+
+        showToast("Login successful!");
+
+        closeModal("login");
+
+        // Update UI if function exists
+        if (typeof updateAuthUI === "function") {
+            updateAuthUI();
+        }
+
+        // Redirect
+        window.location.href = "index.html";
+
+    } catch (err) {
+        console.error("Google Login Error:", err);
+        showToast("Unable to connect to server.");
+    }
+}
 
 // Tell the website the user is logged in
 localStorage.setItem("loggedIn", "true");

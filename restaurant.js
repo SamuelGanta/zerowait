@@ -29,34 +29,33 @@ async function loadRestaurant() {
 
     try {
 
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
+        const id = Number(new URLSearchParams(window.location.search).get("id"));
 
         const response = await fetch(`${API_BASE}/api/restaurants`);
-        const data = await response.json();
 
-        // Find the selected restaurant
-        currentRestaurant = data.find(r => r.id == id);
+        const restaurants = await response.json();
 
-        if (!currentRestaurant) {
+        const data = restaurants.find(r => r.id === id);
+
+        if (!data) {
             showToast("Restaurant not found");
             return;
         }
 
-        document.getElementById("restaurantName").innerText =
-            currentRestaurant.name;
+        currentRestaurant = data;
 
-        // Set wallpaper
-        const wallpaper = getWallpaper(currentRestaurant.cuisine);
+        document.getElementById("restaurantName").innerText = data.name;
+
+        const wallpaper = getWallpaper(data.cuisine);
+
         document.getElementById("heroSection").style.backgroundImage =
             `url('${wallpaper}')`;
 
-        const menuContainer =
-            document.getElementById("menuContainer");
+        const menuContainer = document.getElementById("menuContainer");
 
         menuContainer.innerHTML = "";
 
-        currentRestaurant.menu.forEach(item => {
+        data.menu.forEach(item => {
 
             menuContainer.innerHTML += `
                 <div class="menu-card">
@@ -66,16 +65,20 @@ async function loadRestaurant() {
                     <button onclick="addToCart('${item.name}', ${item.price})">
                         Add To Cart
                     </button>
+
                 </div>
             `;
+
         });
 
-    } catch (error) {
+    } catch (err) {
 
-        console.error(error);
+        console.error(err);
+
         showToast("Could not load menu");
 
     }
+
 }
 
 // =====================
