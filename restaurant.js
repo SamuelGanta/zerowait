@@ -29,39 +29,43 @@ async function loadRestaurant() {
 
     try {
 
-        const response = await fetch(`${API_BASE}/api/restaurants`)
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
 
+        const response = await fetch(`${API_BASE}/api/restaurants`);
+        const data = await response.json();
 
-        const data = await response.js
-        currentRestaurant = data;
+        // Find the selected restaurant
+        currentRestaurant = data.find(r => r.id == id);
 
-        document.getElementById(
-            "restaurantName"
-        ).innerText = data.name;
-        
-        // Set wallpaper based on cuisine
-        const wallpaper = getWallpaper(data.cuisine);
-        const heroSection = document.getElementById('heroSection');
-        heroSection.style.backgroundImage = `url('${wallpaper}')`;
+        if (!currentRestaurant) {
+            showToast("Restaurant not found");
+            return;
+        }
+
+        document.getElementById("restaurantName").innerText =
+            currentRestaurant.name;
+
+        // Set wallpaper
+        const wallpaper = getWallpaper(currentRestaurant.cuisine);
+        document.getElementById("heroSection").style.backgroundImage =
+            `url('${wallpaper}')`;
 
         const menuContainer =
             document.getElementById("menuContainer");
 
         menuContainer.innerHTML = "";
 
-        data.menu.forEach(item => {
+        currentRestaurant.menu.forEach(item => {
 
             menuContainer.innerHTML += `
                 <div class="menu-card">
-
                     <h3>${item.name}</h3>
-
                     <p>₹${item.price}</p>
 
                     <button onclick="addToCart('${item.name}', ${item.price})">
                         Add To Cart
                     </button>
-
                 </div>
             `;
         });
@@ -69,8 +73,8 @@ async function loadRestaurant() {
     } catch (error) {
 
         console.error(error);
-
         showToast("Could not load menu");
+
     }
 }
 
