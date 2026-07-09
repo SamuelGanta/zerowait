@@ -225,17 +225,19 @@ app.post('/api/verify-otp', async (req, res) => {
 });
 app.post('/api/auth/google', async (req, res) => {
   try {
-    const { token } = req.body;
 
-    if (!token) {
+    // Accept credential from frontend
+    const { credential } = req.body;
+
+    if (!credential) {
       return res.status(400).json({
         success: false,
-        message: 'Google token is required'
+        message: "Google credential is required"
       });
     }
 
     const ticket = await googleClient.verifyIdToken({
-      idToken: token,
+      idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID
     });
 
@@ -247,7 +249,7 @@ app.post('/api/auth/google', async (req, res) => {
       name
     } = payload;
 
-    // Check if user already exists
+    // Check if user exists
     let result = await queryDb(
       `SELECT * FROM users WHERE email = $1`,
       [email]
@@ -259,10 +261,10 @@ app.post('/api/auth/google', async (req, res) => {
 
       result = await queryDb(
         `INSERT INTO users (name, email, phone, google_id)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *`,
-        [name, email, null, sub]
-);
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [name, email, "GOOGLE_USER", sub]
+      );
 
       user = result.rows[0];
 
@@ -272,16 +274,16 @@ app.post('/api/auth/google', async (req, res) => {
 
       await queryDb(
         `UPDATE users
-         SET google_id=$1,
-             name=$2
-         WHERE id=$3`,
+         SET google_id = $1,
+             name = $2
+         WHERE id = $3`,
         [sub, name, user.id]
       );
     }
 
     res.json({
       success: true,
-      message: 'Google login successful',
+      message: "Google login successful",
       user
     });
 
@@ -291,32 +293,10 @@ app.post('/api/auth/google', async (req, res) => {
 
     res.status(401).json({
       success: false,
-      message: 'Google authentication failed'
+      message: err.message
     });
 
   }
-});
-// =============================
-// RESTAURANTS
-// =============================
-
-app.get('/api/restaurants', async (req, res) => {
-
-    try {
-
-        const result = await queryDb(
-            'SELECT * FROM restaurants ORDER BY rating DESC'
-        );
-
-        res.json(result.rows);
-
-    } catch (err) {
-
-        console.error(err);
-        res.json(getFallbackRestaurants());
-
-    }
-
 });
 // =============================
 // GET SINGLE RESTAURANT + MENU
