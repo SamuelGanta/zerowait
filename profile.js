@@ -1,7 +1,7 @@
 const isLoggedIn = localStorage.getItem("loggedIn");
 if (isLoggedIn !== "true") {
   alert("Please login first");
-  window.location.href = "zerowait_zen.html";
+  window.location.href = "index.html";
 }
 
 const hour = new Date().getHours();
@@ -38,7 +38,7 @@ function logout() {
   localStorage.removeItem("loggedIn");
   localStorage.removeItem("name");
   localStorage.removeItem("phone");
-  window.location.href = "zerowait_zen.html";
+  window.location.href = "index.html";
 }
 
 function openActionModal(type) {

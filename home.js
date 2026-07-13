@@ -8,7 +8,7 @@ if (data.success) {
 
     localStorage.setItem("loggedIn", true);
 
-    window.location.href = "zerowait_zen.html";
+    window.location.href = "index.html";
 }
 
 // Welcome User
