@@ -511,29 +511,43 @@ app.get('/api/latest-order', async (req, res) => {
 
         const latestOrder = orderResult.rows[0];
 
+        let queuePosition = 1;
+
+        try {
+
         const queueResult = await queryDb(`
-            SELECT COUNT(*) AS position
-            FROM orders
-            WHERE status != 'Ready'
-            AND id <= $1
+        SELECT COUNT(*) AS position
+        FROM orders
+        WHERE id <= $1
         `, [latestOrder.id]);
 
-        const queuePosition =
-            Number(queueResult.rows[0].position);
+        queuePosition =
+        Number(queueResult.rows[0].position);
 
-        res.json({
+} catch (err) {
 
-            id: latestOrder.id,
+    console.log(
+        "Queue position calculation failed:",
+        err.message
+    );
 
-            amount: latestOrder.amount,
+}
 
-            status: latestOrder.status,
+res.json({
 
-            queuePosition,
+    id: latestOrder.id,
 
-            waitTime: queuePosition * 3
+    amount: latestOrder.amount,
 
-        });
+    status:
+        latestOrder.status || "Preparing",
+
+    queuePosition,
+
+    waitTime:
+        queuePosition * 3
+
+});
 
     } catch (err) {
 
