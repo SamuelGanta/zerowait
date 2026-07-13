@@ -255,7 +255,6 @@ async function checkout() {
     const total = calculateTotal();
 
     if (total === 0) {
-
         showToast("Cart is empty");
         return;
     }
@@ -270,70 +269,61 @@ async function checkout() {
         document.getElementById("tableNumber").value;
 
     if (!customerName.trim()) {
-
         showToast("Enter customer name");
         return;
     }
 
     const items = Object.keys(cart)
-        .map(item =>
-            `${item} x${cart[item].quantity}`
-        )
-        .join(", ");
+        .map(item => ({
+            name: item,
+            quantity: cart[item].quantity,
+            price: cart[item].price
+        }));
 
     try {
 
         const response = await fetch(
-    `${API_BASE}/api/orders`,
-    {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+            `${API_BASE}/api/orders`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    user_id: 1,
+                    restaurant_id: restaurantId,
+                    amount: total,
+                    customer_name: customerName,
+                    order_type: orderType,
+                    table_number:
+                        orderType === "Take Away"
+                            ? "N/A"
+                            : tableNumber,
+                    items: items
+                })
+            }
+        );
 
-            user_id: 1,
+        console.log("Status:", response.status);
 
-            restaurant_id: restaurantId,
+        const text = await response.text();
 
-            amount: total,
+        console.log("Server Response:", text);
 
-            customer_name: customerName,
+        let data = {};
 
-            order_type: orderType,
-
-            table_number:
-                orderType === "Take Away"
-                ? "N/A"
-                : tableNumber,
-
-            items: items
-
-        })
-    }
-);
-
-console.log("Status:", response.status);
-
-const text = await response.text();
-
-console.log("Server Response:", text);
-
-let data = {};
-
-try {
-    data = JSON.parse(text);
-} catch (e) {
-    console.error("Invalid JSON returned by server");
-}
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error("Invalid JSON returned by server");
+        }
 
         if (data.success) {
-            if (data.success) {
 
-    localStorage.setItem(
-        "latestOrder",
-        JSON.stringify(data.order)
-    );
+            localStorage.setItem(
+                "latestOrder",
+                JSON.stringify(data.order)
+            );
 
             showToast("Order Saved Successfully");
 
@@ -341,18 +331,21 @@ try {
 
             renderCart();
 
-            document.getElementById("customerName").value = "";
+            document.getElementById(
+                "customerName"
+            ).value = "";
 
             setTimeout(() => {
-
                 window.location.href =
-                "order-tracking.html";
-
+                    "order-tracking.html";
             }, 1000);
 
         } else {
 
-            showToast("Failed to save order");
+            showToast(
+                data.message ||
+                "Failed to save order"
+            );
         }
 
     } catch (err) {
