@@ -493,11 +493,15 @@ app.get('/api/latest-order', async (req, res) => {
         }
 
         const orderResult = await queryDb(`
-            SELECT *
-            FROM orders
-            ORDER BY id DESC
-            LIMIT 1
-        `);
+    SELECT
+        o.*,
+        r.name AS restaurant_name
+    FROM orders o
+    LEFT JOIN restaurants r
+        ON o.restaurant_id = r.id
+    ORDER BY o.id DESC
+    LIMIT 1
+`);
 
         if (orderResult.rows.length === 0) {
 
@@ -534,19 +538,12 @@ app.get('/api/latest-order', async (req, res) => {
 }
 
 res.json({
-
     id: latestOrder.id,
-
+    restaurant: latestOrder.restaurant_name,
     amount: latestOrder.amount,
-
-    status:
-        latestOrder.status || "Preparing",
-
-    queuePosition,
-
-    waitTime:
-        queuePosition * 3
-
+    status: latestOrder.status || "Preparing",
+    queuePosition: queuePosition,
+    waitTime: queuePosition * 3
 });
 
     } catch (err) {
