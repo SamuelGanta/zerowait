@@ -284,36 +284,48 @@ async function checkout() {
     try {
 
         const response = await fetch(
-            "/api/orders",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
+    `${API_BASE}/api/orders`,
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
 
-                    user_id: 1,
+            user_id: 1,
 
-                    restaurant_id: restaurantId,
+            restaurant_id: restaurantId,
 
-                    amount: total,
+            amount: total,
 
-                    customer_name: customerName,
+            customer_name: customerName,
 
-                    order_type: orderType,
+            order_type: orderType,
 
-                    table_number:
-                        orderType === "Take Away"
-                        ? "N/A"
-                        : tableNumber,
+            table_number:
+                orderType === "Take Away"
+                ? "N/A"
+                : tableNumber,
 
-                    items: items
+            items: items
 
-                })
-            }
-        );
+        })
+    }
+);
 
-        const data = await response.json();
+console.log("Status:", response.status);
+
+const text = await response.text();
+
+console.log("Server Response:", text);
+
+let data = {};
+
+try {
+    data = JSON.parse(text);
+} catch (e) {
+    console.error("Invalid JSON returned by server");
+}
 
         if (data.success) {
 
