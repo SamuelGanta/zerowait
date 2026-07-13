@@ -407,7 +407,7 @@ try {
         memoryOrders.unshift(order);
         return res.json({ success: true, order });
     }
-
+    console.log("Items:", JSON.stringify(items, null, 2));
     const result = await queryDb(
         `
         INSERT INTO orders
@@ -433,7 +433,7 @@ try {
             customer_name,
             order_type,
             table_number,
-            items
+            JSON.stringify(items)
         ]
     );
 
