@@ -654,7 +654,65 @@ app.get('/api/orders/user/:id', async (req, res) => {
     }
 
 });
-            
+            // =============================
+// ORDER HISTORY
+// =============================
+
+app.get('/api/orders/history', async (req, res) => {
+
+    try {
+
+        const { customer } = req.query;
+
+        if (!customer) {
+            return res.status(400).json({
+                success: false,
+                message: "Customer name is required"
+            });
+        }
+
+        if (!dbReady) {
+
+            const history = memoryOrders.filter(
+                order => order.customer_name === customer
+            );
+
+            return res.json(history);
+
+        }
+
+        const result = await queryDb(`
+            SELECT
+                o.id,
+                r.name AS restaurant,
+                o.customer_name,
+                o.order_type,
+                o.table_number,
+                o.items,
+                o.amount,
+                o.status,
+                o.created_at
+            FROM orders o
+            LEFT JOIN restaurants r
+                ON o.restaurant_id = r.id
+            WHERE o.customer_name = $1
+            ORDER BY o.created_at DESC
+        `, [customer]);
+
+        res.json(result.rows);
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch order history"
+        });
+
+    }
+
+});
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 ZeroWait OTP Server running on port ${PORT}`);
 });
