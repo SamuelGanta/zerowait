@@ -540,6 +540,10 @@ app.get('/api/latest-order', async (req, res) => {
 res.json({
     id: latestOrder.id,
     restaurant: latestOrder.restaurant_name,
+    customer: latestOrder.customer_name,
+    orderType: latestOrder.order_type,
+    table: latestOrder.table_number,
+    items: latestOrder.items,
     amount: latestOrder.amount,
     status: latestOrder.status || "Preparing",
     queuePosition: queuePosition,
