@@ -64,14 +64,15 @@
 </div>
 
 <script>
+const API_BASE = "https://zerowait-2.onrender.com";
 
 async function loadOrder() {
 
     try {
 
         const response = await fetch(
-            "/api/latest-order"
-        );
+    `${API_BASE}/api/latest-order`
+);
 
         const data = await response.json();
 
