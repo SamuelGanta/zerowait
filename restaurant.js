@@ -328,6 +328,12 @@ try {
 }
 
         if (data.success) {
+            if (data.success) {
+
+    localStorage.setItem(
+        "latestOrder",
+        JSON.stringify(data.order)
+    );
 
             showToast("Order Saved Successfully");
 
