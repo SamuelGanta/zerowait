@@ -122,7 +122,7 @@ function saveSettings() {
 
 async function loadOrderHistory() {
   try {
-    const response = await fetch("/api/orders");
+    const response = await fetch("https://zerowait-2.onrender.com/api/orders");
     let orders = await response.json();
     if (!Array.isArray(orders) || orders.length === 0) {
       orders = JSON.parse(localStorage.getItem("orders") || "[]");
