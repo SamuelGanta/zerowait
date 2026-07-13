@@ -2589,10 +2589,24 @@ async function handleGoogleLogin(response) {
             return;
         }
 
-        // Save user
-        localStorage.setItem("currentUser", JSON.stringify(data.user));
-        localStorage.setItem("loggedIn", "true");
+       // Save user information
+       localStorage.setItem("currentUser", JSON.stringify(data.user));
+       localStorage.setItem("loggedIn", "true");
 
+      localStorage.setItem(
+           "name",
+          data.user.name || data.user.username || "Guest"
+);
+
+localStorage.setItem(
+    "phone",
+    data.user.phone || data.user.email || "Google User"
+);
+
+// Save token if backend returns one
+if (data.token) {
+    localStorage.setItem("token", data.token);
+}
         // Save token if backend returns one
         if (data.token) {
             localStorage.setItem("token", data.token);
