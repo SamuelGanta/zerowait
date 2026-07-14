@@ -442,33 +442,18 @@ try {
         order: result.rows[0]
     });
 
-} catch (err) {
+} 
+catch (err) {
 
+    console.error("ORDER INSERT ERROR:");
     console.error(err);
 
-    const order = {
-        id: Date.now(),
-        user_id,
-        restaurant_id,
-        amount,
-        customer_name,
-        order_type,
-        table_number,
-        items,
-        status: 'Pending',
-        created_at: new Date().toISOString()
-    };
-    memoryOrders.unshift(order);
-
-    res.json({
-        success: true,
-        order
+    return res.status(500).json({
+        success: false,
+        message: err.message
     });
 
 }
-
-});
-
 
 // =============================
 // GET LATEST ORDER
