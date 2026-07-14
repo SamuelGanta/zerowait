@@ -259,8 +259,7 @@ async function checkout() {
         return;
     }
 
-    const customerName =
-        document.getElementById("customerName").value;
+    const customerName = localStorage.getItem("name");
 
     const orderType =
         document.getElementById("orderType").value;
