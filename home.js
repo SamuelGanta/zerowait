@@ -2,15 +2,6 @@
 // ZeroWait Home Page
 // =========================
 
-// Protect Home Page
-
-if (data.success) {
-
-    localStorage.setItem("loggedIn", true);
-
-    window.location.href = "index.html";
-}
-
 // Welcome User
 
 const userName =

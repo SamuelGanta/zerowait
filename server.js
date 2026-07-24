@@ -112,7 +112,21 @@ function getMenuForRestaurant(name) {
       ];
   }
 }
+async function getMenuFromDB(restaurantId) {
 
+    const result = await queryDb(
+        `
+        SELECT id, name, price
+        FROM menu_items
+        WHERE restaurant_id = $1
+        ORDER BY id
+        `,
+        [restaurantId]
+    );
+
+    return result.rows;
+
+}
 function getFallbackRestaurant(id) {
   const restaurant = sampleRestaurants.find(item => String(item.id) === String(id));
   if (!restaurant) return null;
@@ -308,10 +322,12 @@ app.get('/api/restaurants', async (req, res) => {
             'SELECT * FROM restaurants ORDER BY rating DESC'
         );
 
-        const restaurants = result.rows.map(restaurant => ({
-            ...restaurant,
-            menu: getMenuForRestaurant(restaurant.name)
-        }));
+        const restaurants = await Promise.all(
+    result.rows.map(async (restaurant) => ({
+        ...restaurant,
+        menu: await getMenuFromDB(restaurant.id)
+    }))
+);
 
         res.json(restaurants);
 
@@ -348,12 +364,13 @@ app.get('/api/restaurants/:id', async (req, res) => {
         }
 
         const restaurant = restaurantResult.rows[0];
-        const menu = getMenuForRestaurant(restaurant.name);
+
+        const menu = await getMenuFromDB(restaurant.id);
 
         res.json({
-            ...restaurant,
-            menu
-        });
+        ...restaurant,
+        menu
+});
 
     } catch (err) {
 
@@ -378,17 +395,18 @@ app.get('/api/restaurants/:id', async (req, res) => {
 app.post('/api/orders', async (req, res) => {
 
 const {
-
     user_id,
     restaurant_id,
-    amount,
     customer_name,
     order_type,
     table_number,
     items
-
 } = req.body;
 
+const calculatedAmount = items.reduce(
+    (sum, item) => sum + (item.price * item.quantity),
+    0
+);
 try {
 
     if (!dbReady) {
@@ -407,34 +425,71 @@ try {
         memoryOrders.unshift(order);
         return res.json({ success: true, order });
     }
+    const queueResult = await queryDb(
+    `
+    SELECT COUNT(*) AS queue_size
+    FROM orders
+    WHERE restaurant_id = $1
+    AND status IN ('Pending', 'Accepted', 'Preparing')
+    `,
+    [restaurant_id]
+);
+
+const queuePosition =
+    Number(queueResult.rows[0].queue_size) + 1;
+
+const restaurantResult = await queryDb(
+    `
+    SELECT avg_prep_time
+    FROM restaurants
+    WHERE id = $1
+    `,
+    [restaurant_id]
+);
+
+const avgPrepTime =
+    restaurantResult.rows[0]?.avg_prep_time || 12;
+
+const estimatedWait =
+    queuePosition * avgPrepTime;
+
+const estimatedReadyAt = new Date(
+    Date.now() + estimatedWait * 60000
+);
     console.log("Items:", JSON.stringify(items, null, 2));
     const result = await queryDb(
         `
         INSERT INTO orders
         (
-            user_id,
-            restaurant_id,
-            amount,
-            customer_name,
-            order_type,
-            table_number,
-            items
+        user_id,
+        restaurant_id,
+        amount,
+        customer_name,
+        order_type,
+        table_number,
+        items,
+        status,
+        estimated_wait,
+        estimated_ready_at
         )
         VALUES
         (
-            $1,$2,$3,$4,$5,$6,$7
+            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10
         )
         RETURNING *
         `,
         [
-            user_id,
-            restaurant_id,
-            amount,
-            customer_name,
-            order_type,
-            table_number,
-            JSON.stringify(items)
-        ]
+    user_id,
+    restaurant_id,
+    calculatedAmount,
+    customer_name,
+    order_type,
+    table_number,
+    JSON.stringify(items),
+    'Pending',
+    estimatedWait,
+    estimatedReadyAt
+]
     );
 
     res.json({
@@ -534,7 +589,8 @@ res.json({
     amount: latestOrder.amount,
     status: latestOrder.status || "Preparing",
     queuePosition: queuePosition,
-    waitTime: queuePosition * 3
+    waitTime: latestOrder.estimated_wait || (queuePosition * 3),
+    estimatedReadyAt: latestOrder.estimated_ready_at
 });
 
     } catch (err) {
